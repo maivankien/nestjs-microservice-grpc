@@ -2,12 +2,14 @@ import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppConfigService } from './configs/app/config.service';
+import { ValidationPipe } from '@nestjs/common';
 
 declare const module: NodeModule & { hot: any }
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule)
     const appConfig: AppConfigService = app.get(AppConfigService)
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
 
     app.setGlobalPrefix('api')
 

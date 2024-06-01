@@ -1,6 +1,8 @@
 import { registerAs } from '@nestjs/config';
 
 export default registerAs('app', () => ({
+    JWT_SECRET: process.env.JWT_SECRET,
+
     GRPC_URL: process.env.GRPC_URL,
     PROTO_PATH: process.env.PROTO_PATH || "proto/auth.proto",
 

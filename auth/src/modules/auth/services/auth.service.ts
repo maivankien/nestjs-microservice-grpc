@@ -1,17 +1,21 @@
 import { Repository } from "typeorm";
+import { JwtService } from "./jwt.service";
 import { InjectRepository } from "@nestjs/typeorm";
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { RegisterDto } from "../presentation/dtos/auth.dto";
 import { User } from "../presentation/entities/user.entity";
-import { hashPassword } from "src/common/utils/common.util";
-import { RegisterResponse } from "../proto/auth.proto";
+import { hashPassword, isPasswordValid } from "src/common/utils/common.util";
+import { LoginResponse, RegisterResponse } from "../proto/auth.proto";
+import { ERROR_MYSQL_DUPLICATE_KEY } from "src/common/constants/common.constant";
 
 
 @Injectable()
 export class AuthService {
     constructor(
+        private readonly jwtService: JwtService,
+
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
     ) { }
 
     public async register(input: RegisterDto): Promise<RegisterResponse> {
@@ -24,10 +28,28 @@ export class AuthService {
             await this.userRepository.save(user)
             return { status: HttpStatus.CREATED, error: null }
         } catch (error) {
-            if (error.code === "ER_DUP_ENTRY") {
+            if (error.code === ERROR_MYSQL_DUPLICATE_KEY) {
                 return { status: HttpStatus.CONFLICT, error: ['Email already exists'] }
             }
             return { status: HttpStatus.INTERNAL_SERVER_ERROR, error: ['Internal server error'] }
         }
+    }
+
+    public async login(input: RegisterDto): Promise<LoginResponse> {
+        const user: User = await this.userRepository.findOne({ where: { email: input.email } })
+
+        if (!user) {
+            return { status: HttpStatus.NOT_FOUND, error: ['Email not found'], token: null }
+        }
+
+        const isPasswordMatch = await isPasswordValid(input.password, user.password)
+
+        if (!isPasswordMatch) {
+            return { status: HttpStatus.UNAUTHORIZED, error: ['Invalid password'], token: null }
+        }
+
+        const token = this.jwtService.generateJwtToken(user)
+
+        return { status: HttpStatus.OK, error: null, token: token }
     }
 }

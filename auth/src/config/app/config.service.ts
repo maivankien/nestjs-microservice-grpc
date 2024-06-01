@@ -32,4 +32,8 @@ export class AppConfigService {
     get databasePassword(): string {
         return this.configService.get<string>('app.DATABASE_PASSWORD')
     }
+
+    get jwtSecret(): string {
+        return this.configService.get<string>('app.JWT_SECRET')
+    }
 }

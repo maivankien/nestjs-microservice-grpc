@@ -16,4 +16,9 @@ export class AuthController {
     private async register(payload: RegisterDto): Promise<RegisterResponse> {
         return this.authService.register(payload)
     }
+
+    @GrpcMethod(AUTH_SERVICE_NAME, 'login')
+    private async login(payload: RegisterDto): Promise<RegisterResponse> {
+        return this.authService.login(payload)
+    }
 }

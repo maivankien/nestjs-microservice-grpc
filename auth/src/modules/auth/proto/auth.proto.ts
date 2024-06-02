@@ -8,3 +8,9 @@ export interface LoginResponse {
     token: string
     error: string[]
 }
+
+export interface VerifyResponse {
+    status: number
+    error: string[]
+    userId: string
+}

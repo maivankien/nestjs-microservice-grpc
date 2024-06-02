@@ -1,8 +1,8 @@
 import { Controller } from "@nestjs/common";
-import { RegisterDto } from "../dtos/auth.dto";
+import { RegisterDto, TokenRequest } from "../dtos/auth.dto";
 import { GrpcMethod } from "@nestjs/microservices";
 import { AuthService } from "../../services/auth.service";
-import { RegisterResponse } from "../../proto/auth.proto";
+import { RegisterResponse, VerifyResponse } from "../../proto/auth.proto";
 import { AUTH_SERVICE_NAME } from "src/common/constants/microservice.constant";
 
 
@@ -20,5 +20,10 @@ export class AuthController {
     @GrpcMethod(AUTH_SERVICE_NAME, 'login')
     private async login(payload: RegisterDto): Promise<RegisterResponse> {
         return this.authService.login(payload)
+    }
+
+    @GrpcMethod(AUTH_SERVICE_NAME, 'verify')
+    private async verify(payload: TokenRequest): Promise<VerifyResponse> {
+        return this.authService.verify(payload)
     }
 }

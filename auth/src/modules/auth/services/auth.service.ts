@@ -2,11 +2,11 @@ import { Repository } from "typeorm";
 import { JwtService } from "./jwt.service";
 import { InjectRepository } from "@nestjs/typeorm";
 import { HttpStatus, Injectable } from "@nestjs/common";
-import { RegisterDto } from "../presentation/dtos/auth.dto";
+import { RegisterDto, TokenRequest } from "../presentation/dtos/auth.dto";
 import { User } from "../presentation/entities/user.entity";
 import { hashPassword, isPasswordValid } from "src/common/utils/common.util";
-import { LoginResponse, RegisterResponse } from "../proto/auth.proto";
 import { ERROR_MYSQL_DUPLICATE_KEY } from "src/common/constants/common.constant";
+import { LoginResponse, RegisterResponse, VerifyResponse } from "../proto/auth.proto";
 
 
 @Injectable()
@@ -51,5 +51,22 @@ export class AuthService {
         const token = this.jwtService.generateJwtToken(user)
 
         return { status: HttpStatus.OK, error: null, token: token }
+    }
+
+    public async verify(payload: TokenRequest): Promise<VerifyResponse> {
+        const { token } = payload
+        const decoded = await this.jwtService.verify(token)
+
+        if (!decoded) {
+            return { status: HttpStatus.UNAUTHORIZED, error: ['Invalid token'], userId: null }
+        }
+
+        const user: User = await this.userRepository.findOne({ where: { id: decoded.id } })
+
+        if (!user) {
+            return { status: HttpStatus.NOT_FOUND, error: ['User not found'], userId: null }
+        }
+
+        return { status: HttpStatus.OK, error: null, userId: user.id }
     }
 }

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package product_command;
+
+service ProductCommandService {
+    rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse) {}
+}
+
+message CreateProductRequest {
+    string name = 1;
+    int32 price = 2;
+    string description = 3;
+}
+
+
+message CreateProductResponse {
+    int32 status = 1;
+    repeated string error = 2;
+}

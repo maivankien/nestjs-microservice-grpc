@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppConfigService } from './configs/app/config.service';
 import { ValidationPipe } from '@nestjs/common';
+import { AllExceptionsFilter } from './common/exceptions/exception.filter';
 
 declare const module: NodeModule & { hot: any }
 
@@ -12,6 +13,7 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
 
     app.setGlobalPrefix('api')
+    app.useGlobalFilters(new AllExceptionsFilter())
 
     const swaggerConfig = new DocumentBuilder()
         .setTitle(appConfig.name)

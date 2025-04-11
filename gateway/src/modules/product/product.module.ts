@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { AuthModule } from "../auth/auth.module";
 import { ClientsModule, Transport } from "@nestjs/microservices";
 import { ProductController } from "./controllers/product.controller";
 import { MicroserviceConfigModule } from "src/configs/microservice/config.module";
@@ -7,6 +8,7 @@ import { PRODUCT_COMMAND_PACKAGE_NAME, PRODUCT_COMMAND_SERVICE_NAME, PRODUCT_QUE
 
 @Module({
     imports: [
+        AuthModule,
         ClientsModule.registerAsync([
             {
                 name: PRODUCT_COMMAND_SERVICE_NAME,

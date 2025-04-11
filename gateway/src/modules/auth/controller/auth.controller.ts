@@ -7,7 +7,7 @@ import { AuthServiceClient } from "../proto/auth.proto";
 import { AUTH_SERVICE_NAME } from "src/common/constants/microservice.constant";
 import { Body, Controller, HttpStatus, Inject, OnModuleInit, Post, Res } from "@nestjs/common";
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController implements OnModuleInit {
     private service: AuthServiceClient

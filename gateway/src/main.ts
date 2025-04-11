@@ -28,7 +28,11 @@ async function bootstrap() {
         .build()
 
     const document = SwaggerModule.createDocument(app, swaggerConfig)
-    SwaggerModule.setup('api-gateway', app, document)
+    SwaggerModule.setup('api-gateway', app, document, {
+        swaggerOptions: {
+            persistAuthorization: true,
+        },
+    })
 
     await app.init()
     await app.listen(appConfig.port)

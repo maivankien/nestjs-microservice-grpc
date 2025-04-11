@@ -11,7 +11,12 @@ export class JwtService {
 
 
     public async verify(token: string): Promise<User> {
-        return this.jwt.verify(token)
+        try {
+            return this.jwt.verify(token)
+        } catch (error) {
+            console.error('JWT verification error:', error.message)
+            return null
+        }
     }
 
     public generateJwtToken(payload: User): string {

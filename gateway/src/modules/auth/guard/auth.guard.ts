@@ -9,7 +9,7 @@ export class AuthGuard implements CanActivate {
         private readonly authService: AuthService
     ) { }
 
-    public async canActivate(context: ExecutionContext): Promise<boolean | never> {
+    public async canActivate(context: ExecutionContext): Promise<boolean> {
         const req: CustomRequest = context.switchToHttp().getRequest()
 
         const authorization: string = req.headers['authorization']

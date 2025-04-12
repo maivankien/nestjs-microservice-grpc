@@ -3,7 +3,7 @@ import { Controller, HttpStatus } from "@nestjs/common";
 import { GrpcMethod } from "@nestjs/microservices";
 import { CreateProductDto } from "../dtos/create.dto";
 import { CreateProductCommand } from "../command/create-product.command";
-import { PRODUCT_COMMAND_SERVICE_NAME } from "@command/common/constants/microservice.constant";
+import { PRODUCT_COMMAND_SERVICE_NAME } from "@shared/constants/microservice.constant";
 
 @Controller()
 export class CreateProductController {

@@ -1,4 +1,5 @@
 import { ProductCreatedEvent } from "@shared/events/product-created.event";
+import { ProductUpdatedEvent } from "@shared/events/product-updated.event";
 import { ExtendedAggregateRoot } from "nestjs-event-sourcing";
 
 export type ProductCreatedPayload = Readonly<{
@@ -7,11 +8,11 @@ export type ProductCreatedPayload = Readonly<{
     description: string
 }>
 
-export type ProductUpdatedPayload = Readonly<{
-    price: number
-    name: string
-    description: string
-}>
+export type ProductUpdatedPayload = {
+    price?: number
+    name?: string
+    description?: string
+}
 
 
 export class ProductAggregate extends ExtendedAggregateRoot {
@@ -53,6 +54,15 @@ export class ProductAggregate extends ExtendedAggregateRoot {
 
     public created(payload: ProductCreatedPayload) {
         const event = new ProductCreatedEvent({
+            ...payload,
+            id: this.getId(),
+        })
+
+        this.apply(event)
+    }
+
+    public updated(payload: ProductUpdatedPayload) {
+        const event = new ProductUpdatedEvent({
             ...payload,
             id: this.getId(),
         })

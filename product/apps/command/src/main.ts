@@ -3,12 +3,14 @@ import { CommandModule } from './command.module';
 import { AppConfigService } from './config/app/config.service';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { PRODUCT_COMMAND_PACKAGE_NAME } from './common/constants/microservice.constant';
+import { PRODUCT_COMMAND_PACKAGE_NAME } from '@shared/constants/microservice.constant';
+import { HttpExceptionFilter } from './infrastructure/filter/http-exception';
 
 
 async function configure(app: INestApplication, config: AppConfigService): Promise<void> {
     app.enableShutdownHooks()
 
+    app.useGlobalFilters(new HttpExceptionFilter())
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
 
     app.connectMicroservice<GrpcOptions>(

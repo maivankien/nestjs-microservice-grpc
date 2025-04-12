@@ -4,6 +4,7 @@ package product_command;
 
 service ProductCommandService {
     rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse) {}
+    rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse) {}
 }
 
 message CreateProductRequest {
@@ -14,6 +15,18 @@ message CreateProductRequest {
 
 
 message CreateProductResponse {
+    int32 status = 1;
+    repeated string error = 2;
+}
+
+message UpdateProductRequest {
+    string id = 1;
+    string name = 2;
+    int32 price = 3;
+    string description = 4;
+}
+
+message UpdateProductResponse {
     int32 status = 1;
     repeated string error = 2;
 }

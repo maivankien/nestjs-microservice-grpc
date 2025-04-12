@@ -6,7 +6,7 @@ export const ConsumerGroupId = {
     ProductSvc: 'ProductSvc',
 } as const
 
-export const MessagePattern = {
+export const KafkaMessagePattern = {
     ProductCreatedEvent: 'ProductCreatedEvent',
     ProductUpdatedEvent: 'ProductUpdatedEvent',
 }

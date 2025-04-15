@@ -1,3 +1,4 @@
+import { ProductStatusEnum } from "@shared/enums/product.enum";
 import { ProductCreatedEvent } from "@shared/events/product-created.event";
 import { ProductUpdatedEvent } from "@shared/events/product-updated.event";
 import { ExtendedAggregateRoot } from "nestjs-event-sourcing";
@@ -11,6 +12,7 @@ export type ProductCreatedPayload = Readonly<{
 export type ProductUpdatedPayload = {
     price?: number
     name?: string
+    status?: ProductStatusEnum
     description?: string
 }
 
@@ -18,6 +20,7 @@ export type ProductUpdatedPayload = {
 export class ProductAggregate extends ExtendedAggregateRoot {
     private price: number
     private name: string
+    private status: string
     private description: string
 
     public getId(): string | undefined {
@@ -34,6 +37,14 @@ export class ProductAggregate extends ExtendedAggregateRoot {
 
     public setPrice(value: number) {
         this.price = value
+    }
+
+    public getStatus(): string {
+        return this.status
+    }
+
+    public setStatus(value: string) {
+        this.status = value
     }
 
     public getName(): string {

@@ -22,6 +22,7 @@ export class GetProductQueryHandler implements IQueryHandler<GetProductQuery, Pr
                 id: true,
                 name: true,
                 price: true,
+                status: true,
                 description: true,
             }
         })

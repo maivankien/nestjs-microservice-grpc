@@ -13,7 +13,7 @@ export class ProductUpdatedHandler implements IEventHandler<ProductUpdatedEvent>
 
     async handle(event: ProductUpdatedEvent): Promise<void> {
         const update = {}
-        const { id, name, price, description } = event
+        const { id, name, price, description, status } = event
 
         if (name) {
             update["name"] = name
@@ -25,6 +25,14 @@ export class ProductUpdatedHandler implements IEventHandler<ProductUpdatedEvent>
             update["description"] = description
         }
 
+        if (status) {
+            update["status"] = status
+        }
+
+        if (Object.keys(update).length === 0) {
+            return
+        }
+        
         await this.productRepository.update(id, update)
     }
 }

@@ -1,3 +1,4 @@
+import { ProductStatusEnum } from "@shared/enums/product.enum";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: "products" })
@@ -13,6 +14,12 @@ export class Product {
 
     @Column({ type: "text" })
     description: string
+
+    @Column({
+        type: "enum",
+        enum: ProductStatusEnum, 
+    })
+    status: ProductStatusEnum
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date

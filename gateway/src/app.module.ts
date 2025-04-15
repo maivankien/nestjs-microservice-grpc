@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { AppConfigModule } from './configs/app/config.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ProductModule } from './modules/product/product.module';
+import { OrderModule } from './modules/order/order.module';
 
 
 @Module({
@@ -11,6 +12,7 @@ import { ProductModule } from './modules/product/product.module';
         AppConfigModule,
         AuthModule,
         ProductModule,
+        OrderModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -39,7 +39,7 @@ export class UpdateProductCommandHandler implements ICommandHandler<UpdateProduc
 
         const updateProductData: ProductUpdatedPayload = {}
 
-        const { name, description, price } = command
+        const { name, description, price, status } = command
 
         if (name) {
             aggregate.setName(name)
@@ -54,6 +54,11 @@ export class UpdateProductCommandHandler implements ICommandHandler<UpdateProduc
         if (price) {
             aggregate.setPrice(price)
             updateProductData.price = price
+        }
+
+        if (status) {
+            aggregate.setStatus(status)
+            updateProductData.status = status
         }
 
 

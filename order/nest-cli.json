@@ -8,7 +8,6 @@
     "tsConfigPath": "apps/command/tsconfig.app.json"
   },
   "monorepo": true,
-  "root": "apps/command",
   "projects": {
     "command": {
       "type": "application",

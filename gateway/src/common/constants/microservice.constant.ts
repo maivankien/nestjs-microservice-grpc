@@ -18,3 +18,9 @@ export const ORDER_COMMAND_PACKAGE_NAME = "order_command"
 export const ORDER_COMMAND_SERVICE_NAME = "OrderCommandService"
 
 export const ORDER_COMMAND_PROTO_PATH = "proto/order/order-command.proto"
+
+export const ORDER_QUERY_PACKAGE_NAME = "order_query"
+
+export const ORDER_QUERY_SERVICE_NAME = "OrderQueryService"
+
+export const ORDER_QUERY_PROTO_PATH = "proto/order/order-query.proto"

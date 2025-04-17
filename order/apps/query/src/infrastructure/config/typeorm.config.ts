@@ -2,6 +2,8 @@ import { DatabaseType } from "typeorm";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule, TypeOrmModuleAsyncOptions } from "@nestjs/typeorm";
+import { Order } from "../entities/order.entity";
+import { OrderProduct } from "../entities/order-product.entity";
 
 @Module({
     imports: [
@@ -16,7 +18,9 @@ import { TypeOrmModule, TypeOrmModuleAsyncOptions } from "@nestjs/typeorm";
                 password: config.get('DATABASE_PASSWORD'),
                 database: config.get('DATABASE_NAME'),
                 entities: [
-                ]
+                    Order,
+                    OrderProduct
+                ],
             })
         } as TypeOrmModuleAsyncOptions)
     ],

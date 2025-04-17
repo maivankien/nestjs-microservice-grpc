@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { OrderCreatedModule } from './modules/order-created/order-created.module';
+import { TypeOrmModuleConfig } from './infrastructure/config/typeorm.config';
 
 @Module({
     imports: [
@@ -8,6 +9,7 @@ import { OrderCreatedModule } from './modules/order-created/order-created.module
             isGlobal: true,
             envFilePath: ['.env'],
         }),
+        TypeOrmModuleConfig,
         OrderCreatedModule
     ],
 })

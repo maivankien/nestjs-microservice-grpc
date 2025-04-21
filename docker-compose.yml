@@ -1,0 +1,148 @@
+version: "3.8"
+
+services:
+  api-gateway:
+    container_name: nestjs-microservice-api-gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile.development
+    ports:
+      - "3000:3000"
+    environment:
+      AUTH_SERVICE_URL: auth-service:50051
+      PRODUCT_COMMAND_SERVICE_URL: product-command-service:50000
+      PRODUCT_QUERY_SERVICE_URL: product-query-service:50001
+      ORDER_COMMAND_SERVICE_URL: order-command-service:50002
+      ORDER_QUERY_SERVICE_URL: order-query-service:50003
+    depends_on:
+      - auth-service
+      - product-command-service
+      - product-query-service
+      - order-command-service
+      - order-query-service
+
+  auth-service:
+    container_name: nestjs-microservice-auth-service
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+    build:
+      context: ./auth
+      dockerfile: Dockerfile.development
+    ports:
+      - "50051:50051"
+    depends_on:
+      - mysql
+
+  product-command-service:
+    container_name: nestjs-microservice-product-command-service
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      KAFKA_URL: kafka:9092
+      QUERY_GRPC_URL: product-query-service:50001
+      COMMAND_MONGO_URL: mongodb://mongodb:27017/nestjs-microservice-grpc
+    build:
+      context: ./product
+      dockerfile: apps/command/Dockerfile.development
+    ports:
+      - "50000:50000"
+    depends_on:
+      - mysql
+      - mongodb
+      - kafka
+
+  product-query-service:
+    container_name: nestjs-microservice-product-query-service
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      KAFKA_URL: kafka:9092
+    build:
+      context: ./product
+      dockerfile: apps/query/Dockerfile.development
+    ports:
+      - "50001:50001"
+    depends_on:
+      - mysql
+      - kafka
+
+  order-command-service:
+    container_name: nestjs-microservice-order-command-service
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      KAFKA_URL: kafka:9092
+      PRODUCT_COMMAND_SERVICE_URL: product-command-service:50000
+      PRODUCT_QUERY_SERVICE_URL: product-query-service:50001
+      COMMAND_MONGO_URL: mongodb://mongodb:27017/nestjs-microservice-grpc
+    build:
+      context: ./order
+      dockerfile: apps/command/Dockerfile.development
+    ports:
+      - "50002:50002"
+    depends_on:
+      - mysql
+      - mongodb
+      - kafka
+
+  order-query-service:
+    container_name: nestjs-microservice-order-query-service
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      KAFKA_URL: kafka:9092
+      PRODUCT_QUERY_SERVICE_URL: product-query-service:50001
+    build:
+      context: ./order
+      dockerfile: apps/query/Dockerfile.development
+    ports:
+      - "50003:50003"
+    depends_on:
+      - mysql
+      - kafka
+
+  mysql:
+    image: mysql:8.0
+    container_name: nestjs-microservice-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: microservice
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  mongodb:
+    image: mongo:8.0
+    container_name: nestjs-microservice-mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb-data:/data/db
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: nestjs-microservice-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: nestjs-microservice-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+
+volumes:
+  mysql-data:
+  mongodb-data:

@@ -1,0 +1,19 @@
+FROM node:20-alpine AS development
+
+WORKDIR /usr/src/app
+
+ENV NODE_ENV=development
+
+COPY package-lock.json ./
+COPY package.json ./
+
+RUN npm install --legacy-peer-deps
+
+# Copy the rest of the application files
+COPY . .
+
+# Build the NestJS application
+RUN npm run build
+
+# Command to run the application
+CMD ["node", "dist/apps/query/main"]

@@ -12,8 +12,4 @@ export class AppConfigService {
     get protoPath(): string {
         return this.configService.get<string>('app.COMMAND_PROTO_PATH')
     }
-
-    get dataBaseUri(): string {
-        return this.configService.get<string>('app.COMMAND_DATABASE_URL')
-    }
 }
